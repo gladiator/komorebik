@@ -9,11 +9,10 @@ workspace = 0
 padding = 4
 
 [keys]
-move_left = "Left"
-move_right = "Right"
-move_up = "Up"
-move_down = "Down"
-stop = "Space"
+left = { type = "MoveWindow", content = "Left" }
+right = { type = "MoveWindow", content = "Right" }
+up = { type = "MoveWindow", content = "Up" }
+down = { type = "MoveWindow", content = "Down" }
 
 [[window]]
 categories = ["tray"]
@@ -82,22 +81,13 @@ type = "exe"
 name = "ShareX.exe"
 
 [[window]]
-categories = ["bordered", "floating", "tray"]
+categories = ["bordered", "tray"]
 [[window.rule]]
 type = "exe"
 name = "Spotify.exe"
 
 [[window]]
-categories = ["bordered", "floating"]
-[[window.rule]]
-type = "exe"
-name = "Steam.exe"
-[[window.rule]]
-type = "exe"
-name = "steamservice.exe"
-[[window.rule]]
-type = "exe"
-name = "steamwebhelper.exe"
+categories = ["bordered"]
 [[window.rule]]
 type = "class"
 name = "vguiPopupWindow"
