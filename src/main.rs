@@ -1,73 +1,88 @@
+use std::{
+    io::Write,
+    path::PathBuf,
+};
+
 use ::config::{
     Config,
     File,
 };
-use anyhow::Result;
+use eyre::Result;
+use komorebi_core::SocketMessage;
+use lazy_static::lazy_static;
+use uds_windows::UnixStream;
 
 use crate::{
     config::{
-        komorebic,
         Category,
         Konfig,
-        Rule,
     },
     keyboard::HotKey,
-    message::Message,
-    system::poll_message,
+    system::poll_key,
 };
 
 mod config;
 mod keyboard;
-mod message;
 mod system;
 
-/// Initializes the user's configuration via `komorebic`.
-fn init(config: Konfig) -> Result<Vec<HotKey>> {
-    for window in config.windows {
-        for rule in &window.rules {
-            let (rule, name) = match rule {
-                Rule::Class { name } => ("class", name),
-                Rule::Exe { name } => ("exe", name),
-                Rule::Title { name } => ("title", name),
-            };
+/// Submits a message over komorebi's socket.
+fn process(message: &SocketMessage) -> Result<()> {
+    lazy_static! {
+        static ref SOCKET: PathBuf = dirs::data_local_dir()
+            .expect("missing local data directory")
+            .join("komorebi")
+            .join("komorebi.sock");
+    }
 
+    let mut stream = UnixStream::connect(&(*SOCKET))?;
+    stream.write_all(message.as_bytes()?.as_slice())?;
+    Ok(())
+}
+
+/// Initializes the user's configuration via `komorebic`.
+fn init(config: &Konfig) -> Result<Vec<HotKey>> {
+    let app_rule = |&category, identifier, name| -> Result<()> {
+        println!("{:#?} {:#?} {}", category, identifier, name);
+        Ok(match category {
+            Category::Bordered => process(&SocketMessage::IdentifyBorderOverflowApplication(
+                identifier, name,
+            ))?,
+            Category::Floating => process(&SocketMessage::FloatRule(identifier, name))?,
+            Category::Managed => process(&SocketMessage::ManageRule(identifier, name))?,
+            Category::NameChange => process(&SocketMessage::IdentifyObjectNameChangeApplication(
+                identifier, name,
+            ))?,
+            Category::Tray => process(&SocketMessage::IdentifyTrayApplication(identifier, name))?,
+        })
+    };
+
+    for window in &config.windows {
+        for rule in &window.rules {
             for category in &window.categories {
-                let name = format!("\"{}\"", name);
-                komorebic!(
-                    match category {
-                        Category::Bordered => "identify-border-overflow-application",
-                        Category::Floating => "float-rule",
-                        Category::Managed => "manage-rule",
-                        Category::NameChange => "identify-object-name-change-application",
-                        Category::Tray => "identify-tray-application",
-                    },
-                    rule,
-                    &name
-                )?;
+                app_rule(category, rule.identifier, format!("\"{}\"", rule.name))?;
             }
         }
     }
 
-    if let Some(container) = config.container_padding {
-        let m = container.monitor.to_string();
-        let w = container.workspace.to_string();
-        let p = container.padding.to_string();
-        komorebic!("container-padding", &m, &w, &p)?;
+    if let Some(container) = &config.container_padding {
+        process(&SocketMessage::ContainerPadding(
+            container.monitor,
+            container.workspace,
+            container.padding,
+        ))?;
     }
 
-    if let Some(workspace) = config.workspace_padding {
-        let m = workspace.monitor.to_string();
-        let w = workspace.workspace.to_string();
-        let p = workspace.padding.to_string();
-        komorebic!("workspace-padding", &m, &w, &p)?;
+    if let Some(workspace) = &config.workspace_padding {
+        process(&SocketMessage::WorkspacePadding(
+            workspace.monitor,
+            workspace.workspace,
+            workspace.padding,
+        ))?;
     }
 
-    // We store the keys in a Vec and hand it off to the
-    // caller so they stay within their lifetimes during the
-    // application's execution.
     let mut keys = Vec::new();
-    for (message, key) in config.keys {
-        keys.push(HotKey::register(message, key)?);
+    for (key, _message) in &config.keys {
+        keys.push(HotKey::register(key.clone())?);
     }
 
     Ok(keys)
@@ -84,53 +99,13 @@ fn main() -> Result<()> {
         .build()?
         .try_deserialize()?;
 
-    let _keys = init(config)?;
-    while let Some(message) = poll_message()? {
-        if message == Message::Stop {
-            // TODO: Should this execute `komorebic stop`?
-            break;
+    let _keys = init(&config)?;
+    while let Some(key) = poll_key()? {
+        if let Some(message) = config.keys.get(&key) {
+            process(message)?;
         }
 
-        match message {
-            Message::FocusWindowLeft => komorebic!("focus", "left")?,
-            Message::FocusWindowRight => komorebic!("focus", "right")?,
-            Message::FocusWindowUp => komorebic!("focus", "up")?,
-            Message::FocusWindowDown => komorebic!("focus", "down")?,
-
-            Message::MoveWindowLeft => komorebic!("move", "left")?,
-            Message::MoveWindowRight => komorebic!("move", "right")?,
-            Message::MoveWindowUp => komorebic!("move", "up")?,
-            Message::MoveWindowDown => komorebic!("move", "down")?,
-
-            Message::ResizeWindowEdgeLeftDecrease => komorebic!("resize", "left", "decrease")?,
-            Message::ResizeWindowEdgeLeftIncrease => komorebic!("resize", "left", "increase")?,
-            Message::ResizeWindowEdgeRightDecrease => komorebic!("resize", "right", "decrease")?,
-            Message::ResizeWindowEdgeRightIncrease => komorebic!("resize", "right", "increase")?,
-            Message::ResizeWindowEdgeUpDecrease => komorebic!("resize", "up", "decrease")?,
-            Message::ResizeWindowEdgeUpIncrease => komorebic!("resize", "up", "increase")?,
-            Message::ResizeWindowEdgeDownDecrease => komorebic!("resize", "down", "decrease")?,
-            Message::ResizeWindowEdgeDownIncrease => komorebic!("resize", "down", "increase")?,
-
-            Message::ResizeWindowAxisHorizontalDecrease => {
-                komorebic!("resize-axis", "horizontal", "decrease")?
-            },
-            Message::ResizeWindowAxisHorizontalIncrease => {
-                komorebic!("resize-axis", "horizontal", "increase")?
-            },
-            Message::ResizeWindowAxisVerticalDecrease => {
-                komorebic!("resize-axis", "vertical", "decrease")?
-            },
-            Message::ResizeWindowAxisVerticalIncrease => {
-                komorebic!("resize-axis", "vertical", "increase")?
-            },
-            Message::ResizeWindowAxisHorizontalAndVerticalDecrease => {
-                komorebic!("resize-axis", "horizontal_and_vertical", "decrease")?
-            },
-            Message::ResizeWindowAxisHorizontalAndVerticalIncrease => {
-                komorebic!("resize-axis", "horizontal_and_vertical", "increase")?
-            },
-            _ => continue,
-        };
+        continue;
     }
 
     Ok(())

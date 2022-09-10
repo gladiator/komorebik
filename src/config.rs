@@ -1,17 +1,18 @@
 use std::collections::HashMap;
 
+use komorebi_core::{
+    ApplicationIdentifier,
+    SocketMessage,
+};
 use serde::Deserialize;
 
-use crate::{
-    keyboard::VirtualKey,
-    message::Message,
-};
+use crate::keyboard::VirtualKey;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Deserialize)]
 pub struct Padding {
-    pub monitor: u64,
-    pub workspace: u64,
-    pub padding: u64,
+    pub monitor: usize,
+    pub workspace: usize,
+    pub padding: i32,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Deserialize)]
@@ -24,15 +25,14 @@ pub enum Category {
     Tray,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
-#[serde(rename_all = "lowercase", tag = "type")]
-pub enum Rule {
-    Class { name: String },
-    Exe { name: String },
-    Title { name: String },
+#[derive(Clone, Debug, Deserialize)]
+pub struct Rule {
+    #[serde(rename = "type")]
+    pub identifier: ApplicationIdentifier,
+    pub name: String,
 }
 
-#[derive(Clone, Debug, Default, PartialEq, Eq, Deserialize)]
+#[derive(Clone, Debug, Default, Deserialize)]
 #[serde(default)]
 pub struct Window {
     pub categories: Vec<Category>,
@@ -45,20 +45,7 @@ pub struct Window {
 pub struct Konfig {
     pub container_padding: Option<Padding>,
     pub workspace_padding: Option<Padding>,
-    pub keys: HashMap<Message, VirtualKey>,
+    pub keys: HashMap<VirtualKey, SocketMessage>,
     #[serde(rename = "window")]
     pub windows: Vec<Window>,
 }
-
-/// Executes a `komorebic` command and immediately
-/// returns the status of the child process.
-macro_rules! komorebic {
-    ($($args:expr), +) => {
-        std::process::Command::new("komorebic")
-            .args([$($args), +])
-            .status()
-    };
-}
-
-#[rustfmt::skip]
-pub(crate) use komorebic;

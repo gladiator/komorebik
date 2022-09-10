@@ -1,46 +1,41 @@
-use anyhow::Result;
+use eyre::Result;
 use num_derive::{
     FromPrimitive,
     ToPrimitive,
 };
 use serde::Deserialize;
 
-use crate::{
-    message::Message,
-    system::{
-        register_hot_key,
-        unregister_hot_key,
-    },
+use crate::system::{
+    register_hot_key,
+    unregister_hot_key,
 };
 
 /// A system-wide key that is registered upon creation
 /// and unregistered upon destruction.
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct HotKey {
-    message: Message,
-    key: VirtualKey,
-}
+#[repr(transparent)]
+pub struct HotKey(VirtualKey);
 
 impl HotKey {
     /// Creates a [HotKey] and registers it to the system.
     /// Gives ownership of the key to whomever is calling, when
     /// it is dropped it will be unregistered from the system.
-    pub fn register(message: Message, key: VirtualKey) -> Result<Self> {
-        // Register the key to the system and bind it's lifetime to ours
-        register_hot_key(message, key)?;
-        Ok(Self { message, key })
+    pub fn register(key: VirtualKey) -> Result<Self> {
+        register_hot_key(key)?;
+        Ok(Self(key))
     }
 }
 
 impl Drop for HotKey {
     fn drop(&mut self) {
         // Unregister the key from the system, regardless
-        unregister_hot_key(self.key).unwrap();
+        unregister_hot_key(self.0).unwrap();
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Deserialize, FromPrimitive, ToPrimitive)]
+#[derive(Clone, Copy, Debug, Hash, PartialEq, Eq, Deserialize, FromPrimitive, ToPrimitive)]
 #[repr(u32)]
+#[serde(rename_all = "snake_case")]
 pub enum VirtualKey {
     LButton = 0x01,
     RButton = 0x02,
