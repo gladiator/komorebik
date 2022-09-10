@@ -1,0 +1,139 @@
+[container_padding]
+monitor = 0
+workspace = 0
+padding = 4
+
+[workspace_padding]
+monitor = 0
+workspace = 0
+padding = 4
+
+[keys]
+move_left = "Left"
+move_right = "Right"
+move_up = "Up"
+move_down = "Down"
+stop = "Space"
+
+[[window]]
+categories = ["tray"]
+[[window.rule]]
+type = "exe"
+name = "Bitwarden.exe"
+
+[[window]]
+categories = ["bordered", "tray"]
+[[window.rule]]
+type = "exe"
+name = "Discord.exe"
+
+[[window]]
+categories = ["bordered", "managed", "tray"]
+[[window.rule]]
+type = "exe"
+name = "GalaxyClient.exe"
+
+[[window]]
+categories = ["floating"]
+[[window.rule]]
+type = "class"
+name = "Chrome_RenderWidgetHostHWD"
+
+[[window]]
+categories = ["floating"]
+[[window.rule]]
+type = "exe"
+name = "PowerToys.ColorPicker.exe"
+[[window.rule]]
+type = "exe"
+name = "PowerToys.ImageResizer.exe"
+
+[[window]]
+categories = ["bordered", "floating", "tray"]
+[[window.rule]]
+type = "exe"
+name = "ProcessHacker.exe"
+
+[[window]]
+categories = ["name-change", "tray"]
+[[window.rule]]
+type = "exe"
+name = "clion64.exe"
+[[window.rule]]
+type = "exe"
+name = "idea64.exe"
+
+[[window]]
+categories = ["floating"]
+[[window.rule]]
+type = "class"
+name = "SunAwtDialog"
+
+[[window]]
+categories = ["bordered", "tray"]
+[[window.rule]]
+type = "exe"
+name = "lghub.exe"
+
+[[window]]
+categories = ["bordered", "tray"]
+[[window.rule]]
+type = "exe"
+name = "ShareX.exe"
+
+[[window]]
+categories = ["bordered", "floating", "tray"]
+[[window.rule]]
+type = "exe"
+name = "Spotify.exe"
+
+[[window]]
+categories = ["bordered", "floating"]
+[[window.rule]]
+type = "exe"
+name = "Steam.exe"
+[[window.rule]]
+type = "exe"
+name = "steamservice.exe"
+[[window.rule]]
+type = "exe"
+name = "steamwebhelper.exe"
+[[window.rule]]
+type = "class"
+name = "vguiPopupWindow"
+
+[[window]]
+categories = ["floating"]
+[[window.rule]]
+type = "class"
+name = "TaskManagerWindow"
+
+[[window]]
+categories = ["bordered", "tray"]
+[[window.rule]]
+type = "exe"
+name = "Telegram.exe"
+
+[[window]]
+categories = ["bordered"]
+[[window.rule]]
+type = "exe"
+name = "Code.exe"
+
+[[window]]
+categories = ["managed"]
+[[window.rule]]
+type = "class"
+name = "ConsoleWindowClass"
+
+[[window]]
+categories = ["floating"]
+[[window.rule]]
+type = "class"
+name = "OperationStatusWindow"
+[[window.rule]]
+type = "title"
+name = "Control Panel"
+[[window.rule]]
+type = "class"
+name = "MsiDialogCloseClass"

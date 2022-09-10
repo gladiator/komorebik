@@ -1,67 +1,64 @@
-use serde::{
-    Deserialize,
-    Serialize,
+use std::collections::HashMap;
+
+use serde::Deserialize;
+
+use crate::{
+    keyboard::VirtualKey,
+    message::Message,
 };
 
-use crate::keyboard::VirtualKey;
-
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Deserialize, Serialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Deserialize)]
 pub struct Padding {
     pub monitor: u64,
     pub workspace: u64,
     pub padding: u64,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Deserialize, Serialize)]
-pub struct DirectionHotKey {
-    pub left: Option<VirtualKey>,
-    pub right: Option<VirtualKey>,
-    pub up: Option<VirtualKey>,
-    pub down: Option<VirtualKey>,
-}
-
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Deserialize, Serialize)]
-pub struct AxisHotKey {
-    pub horizontal: Option<VirtualKey>,
-    pub vertical: Option<VirtualKey>,
-    pub horizontal_vertical: Option<VirtualKey>,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
-pub struct KeyBindings {
-    pub quit: Option<VirtualKey>,
-    pub move_window: Option<DirectionHotKey>,
-    pub axis_increase: Option<AxisHotKey>,
-    pub axis_decrease: Option<AxisHotKey>,
-}
-
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Deserialize, Serialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Deserialize)]
+#[serde(rename_all = "kebab-case")]
 pub enum Category {
-    Float,
-    Manage,
+    Bordered,
+    Floating,
+    Managed,
     NameChange,
-    Overflow,
     Tray,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
-#[serde(tag = "type")]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
+#[serde(rename_all = "lowercase", tag = "type")]
 pub enum Rule {
     Class { name: String },
     Exe { name: String },
     Title { name: String },
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, PartialEq, Eq, Deserialize)]
+#[serde(default)]
 pub struct Window {
     pub categories: Vec<Category>,
-    pub rule: Vec<Rule>,
+    #[serde(rename = "rule")]
+    pub rules: Vec<Rule>,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
-pub struct Config {
+#[derive(Clone, Debug, Default, Deserialize)]
+#[serde(default)]
+pub struct Konfig {
     pub container_padding: Option<Padding>,
     pub workspace_padding: Option<Padding>,
-    pub key_bindings: Option<KeyBindings>,
-    pub window: Option<Vec<Window>>,
+    pub keys: HashMap<Message, VirtualKey>,
+    #[serde(rename = "window")]
+    pub windows: Vec<Window>,
 }
+
+/// Executes a `komorebic` command and immediately
+/// returns the status of the child process.
+macro_rules! komorebic {
+    ($($args:expr), +) => {
+        std::process::Command::new("komorebic")
+            .args([$($args), +])
+            .status()
+    };
+}
+
+#[rustfmt::skip]
+pub(crate) use komorebic;

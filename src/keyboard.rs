@@ -1,22 +1,45 @@
 use anyhow::Result;
-use serde::{
-    Deserialize,
-    Serialize,
+use num_derive::{
+    FromPrimitive,
+    ToPrimitive,
 };
-use windows::Win32::{
-    Foundation::HWND,
-    UI::Input::KeyboardAndMouse::{
-        RegisterHotKey,
-        UnregisterHotKey,
-        MOD_ALT,
-        MOD_CONTROL,
-        MOD_NOREPEAT,
+use serde::Deserialize;
+
+use crate::{
+    message::Message,
+    system::{
+        register_hot_key,
+        unregister_hot_key,
     },
 };
 
-use crate::message::Message;
+/// A system-wide key that is registered upon creation
+/// and unregistered upon destruction.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct HotKey {
+    message: Message,
+    key: VirtualKey,
+}
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Deserialize, Serialize)]
+impl HotKey {
+    /// Creates a [HotKey] and registers it to the system.
+    /// Gives ownership of the key to whomever is calling, when
+    /// it is dropped it will be unregistered from the system.
+    pub fn register(message: Message, key: VirtualKey) -> Result<Self> {
+        // Register the key to the system and bind it's lifetime to ours
+        register_hot_key(message, key)?;
+        Ok(Self { message, key })
+    }
+}
+
+impl Drop for HotKey {
+    fn drop(&mut self) {
+        // Unregister the key from the system, regardless
+        unregister_hot_key(self.key).unwrap();
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Deserialize, FromPrimitive, ToPrimitive)]
 #[repr(u32)]
 pub enum VirtualKey {
     LButton = 0x01,
@@ -186,41 +209,4 @@ pub enum VirtualKey {
     LaunchMediaSelect = 0xB5,
     LaunchApp1 = 0xB6,
     LaunchApp2 = 0xB7,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct HotKey {
-    message: Message,
-    key: VirtualKey,
-}
-
-impl HotKey {
-    pub fn new(message: Message, key: VirtualKey) -> Self {
-        Self { message, key }
-    }
-
-    pub fn register(&self) -> Result<()> {
-        unsafe {
-            RegisterHotKey(
-                HWND::default(),
-                self.message as i32,
-                MOD_ALT | MOD_CONTROL | MOD_NOREPEAT,
-                self.key as u32,
-            )
-            .ok()?;
-        }
-
-        Ok(())
-    }
-
-    pub fn unregister(&self) -> Result<()> {
-        unsafe { UnregisterHotKey(HWND::default(), self.message as i32).ok()? };
-        Ok(())
-    }
-}
-
-impl Drop for HotKey {
-    fn drop(&mut self) {
-        let _ = self.unregister();
-    }
 }

@@ -1,41 +1,64 @@
-use anyhow::Result;
-use windows::Win32::{
-    Foundation::HWND,
-    UI::WindowsAndMessaging::{
-        GetMessageA,
-        MSG,
-        WM_HOTKEY,
-    },
+use num_derive::{
+    FromPrimitive,
+    ToPrimitive,
 };
+use serde::Deserialize;
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-#[repr(usize)]
+/// Flattened representations of the socket's messages used
+/// within `komorebi_core`.
+///
+/// These are used to identify specific messages as a flat
+/// integer.
+#[derive(Clone, Copy, Debug, Hash, PartialEq, Eq, Deserialize, FromPrimitive, ToPrimitive)]
+#[serde(rename_all = "snake_case")]
 pub enum Message {
-    Quit,
+    #[serde(rename = "focus_left")]
+    FocusWindowLeft,
+    #[serde(rename = "focus_right")]
+    FocusWindowRight,
+    #[serde(rename = "focus_up")]
+    FocusWindowUp,
+    #[serde(rename = "focus_down")]
+    FocusWindowDown,
 
-    DecreaseHorizontal,
-    IncreaseHorizontal,
+    #[serde(rename = "move_left")]
+    MoveWindowLeft,
+    #[serde(rename = "move_right")]
+    MoveWindowRight,
+    #[serde(rename = "move_up")]
+    MoveWindowUp,
+    #[serde(rename = "move_down")]
+    MoveWindowDown,
 
-    DecreaseVertical,
-    IncreaseVertical,
+    #[serde(rename = "resize_edge_left_dec")]
+    ResizeWindowEdgeLeftDecrease,
+    #[serde(rename = "resize_edge_left_inc")]
+    ResizeWindowEdgeLeftIncrease,
+    #[serde(rename = "resize_edge_right_dec")]
+    ResizeWindowEdgeRightDecrease,
+    #[serde(rename = "resize_edge_right_inc")]
+    ResizeWindowEdgeRightIncrease,
+    #[serde(rename = "resize_edge_up_dec")]
+    ResizeWindowEdgeUpDecrease,
+    #[serde(rename = "resize_edge_up_inc")]
+    ResizeWindowEdgeUpIncrease,
+    #[serde(rename = "resize_edge_down_dec")]
+    ResizeWindowEdgeDownDecrease,
+    #[serde(rename = "resize_edge_down_inc")]
+    ResizeWindowEdgeDownIncrease,
 
-    DecreaseHorizontalVertical,
-    IncreaseHorizontalVertical,
+    #[serde(rename = "resize_axis_h_dec")]
+    ResizeWindowAxisHorizontalDecrease,
+    #[serde(rename = "resize_axis_h_inc")]
+    ResizeWindowAxisHorizontalIncrease,
+    #[serde(rename = "resize_axis_v_dec")]
+    ResizeWindowAxisVerticalDecrease,
+    #[serde(rename = "resize_axis_v_inc")]
+    ResizeWindowAxisVerticalIncrease,
+    #[serde(rename = "resize_axis_hv_dec")]
+    ResizeWindowAxisHorizontalAndVerticalDecrease,
+    #[serde(rename = "resize_axis_hv_inc")]
+    ResizeWindowAxisHorizontalAndVerticalIncrease,
 
-    MoveLeft,
-    MoveRight,
-    MoveUp,
-    MoveDown,
-}
-
-pub fn poll_message() -> Result<Option<Message>> {
-    Ok(unsafe {
-        let mut msg = MSG::default();
-        GetMessageA(&mut msg, HWND::default(), 0, 0).ok()?;
-        if msg.message != WM_HOTKEY {
-            None
-        } else {
-            Some(std::mem::transmute(msg.wParam.0))
-        }
-    })
+    Stop,
 }

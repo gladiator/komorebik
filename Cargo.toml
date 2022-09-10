@@ -5,9 +5,11 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.64"
+config = { version = "0.13.2", features = ["toml"] }
 dirs = "4.0.0"
+num-traits = "0.2.15"
+num-derive = "0.3.3"
 serde = { version = "1.0.144", features = ["derive"] }
-toml = "0.5.9"
 
 [dependencies.windows]
 features = [
