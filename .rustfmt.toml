@@ -1,0 +1,15 @@
+# Unstable features
+unstable_features = true
+
+# Configuration options
+brace_style = "SameLineWhere"
+condense_wildcard_suffixes = true
+control_brace_style = "AlwaysSameLine"
+group_imports = "StdExternalCrate"
+hex_literal_case = "Upper"
+imports_layout = "Vertical"
+imports_granularity = "Crate"
+match_block_trailing_comma = true
+overflow_delimited_expr = true
+use_field_init_shorthand = true
+wrap_comments = true

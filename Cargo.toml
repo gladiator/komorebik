@@ -1,0 +1,18 @@
+[package]
+name = "komorebik"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.64"
+dirs = "4.0.0"
+serde = { version = "1.0.144", features = ["derive"] }
+toml = "0.5.9"
+
+[dependencies.windows]
+features = [
+    "Win32_Foundation",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_UI_WindowsAndMessaging",
+]
+version = "0.39.0"
