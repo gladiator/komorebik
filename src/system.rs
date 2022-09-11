@@ -1,11 +1,19 @@
+use std::{
+    io::Write,
+    path::PathBuf,
+};
+
 use eyre::{
     eyre,
     Result,
 };
+use komorebi_core::SocketMessage;
+use lazy_static::lazy_static;
 use num_traits::{
     FromPrimitive,
     ToPrimitive,
 };
+use uds_windows::UnixStream;
 use windows::Win32::UI::{
     Input::KeyboardAndMouse::{
         RegisterHotKey,
@@ -22,6 +30,20 @@ use windows::Win32::UI::{
 };
 
 use crate::keyboard::VirtualKey;
+
+/// Submits a message over komorebi's socket.
+pub(crate) fn process(message: &SocketMessage) -> Result<()> {
+    lazy_static! {
+        static ref SOCKET: PathBuf = dirs::data_local_dir()
+            .expect("missing local data directory")
+            .join("komorebi")
+            .join("komorebi.sock");
+    }
+
+    let mut stream = UnixStream::connect(&(*SOCKET))?;
+    stream.write_all(message.as_bytes()?.as_slice())?;
+    Ok(())
+}
 
 /// Attempts to register a system-wide hotkey that will cause our
 /// application to receive [MSG]s that occur when certain keys are/have

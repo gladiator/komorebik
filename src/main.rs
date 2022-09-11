@@ -1,40 +1,22 @@
-use std::{
-    io::Write,
-    path::PathBuf,
-};
-
 use ::config::{
     Config,
     File,
 };
 use eyre::Result;
 use komorebi_core::SocketMessage;
-use lazy_static::lazy_static;
-use uds_windows::UnixStream;
 
 use crate::{
     config::Konfig,
     keyboard::HotKey,
-    system::poll_key,
+    system::{
+        poll_key,
+        process,
+    },
 };
 
 mod config;
 mod keyboard;
 mod system;
-
-/// Submits a message over komorebi's socket.
-fn process(message: &SocketMessage) -> Result<()> {
-    lazy_static! {
-        static ref SOCKET: PathBuf = dirs::data_local_dir()
-            .expect("missing local data directory")
-            .join("komorebi")
-            .join("komorebi.sock");
-    }
-
-    let mut stream = UnixStream::connect(&(*SOCKET))?;
-    stream.write_all(message.as_bytes()?.as_slice())?;
-    Ok(())
-}
 
 /// Initializes the user's configuration via `komorebic`.
 fn init(config: &Konfig) -> Result<Vec<HotKey>> {
