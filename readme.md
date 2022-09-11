@@ -45,12 +45,12 @@ Window rules are specified within the configuration.
 
 ```toml
 [[window]]
-bordered = true     # identify-border-overflow-application
-floating = true     # float-rule
-layered = true      # identify-layered-application
-managed = true      # manage-rule
-name_change = true  # identify-object-name-change-application
-tray = true         # identify-tray-application
+bordered = true             # identify-border-overflow-application
+floating = true             # float-rule
+layered = true              # identify-layered-application
+managed = true              # manage-rule
+object_name_change = true   # identify-object-name-change-application
+tray = true                 # identify-tray-application
 [[window.rule]]
 type = "class"
 name = "SampleWindowClass"
