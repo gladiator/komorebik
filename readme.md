@@ -4,14 +4,16 @@ A configuration and keyboard shortcut handler for [komorebi](https://github.com/
 
 ## How to Use
 
-A better solution will be provided at some point.  I've just been launching `komorebik` in the background using PowerShell.
+You can build from source using `cargo build --release`.
+
+A better solution will be provided for starting komorebik in the background.  I've just been launching `komorebik.exe` using PowerShell.
 
 ```shell
 Start-Process komorebik.exe -WindowStyle hidden
 ```
 
-This assumes that `komorebik.exe` currently resides somewhere in `PATH`.
-
+[This assumes that komorebik currently resides somewhere in `PATH`.
+](https://github.com/gladiator/komorebik)
 ## Configuration
 
 komorebik's configuration is located at `~/.config/komorebik.toml`.
