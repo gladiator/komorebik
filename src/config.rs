@@ -31,7 +31,7 @@ pub struct Window {
 #[derive(Clone, Debug, Default, Deserialize)]
 #[serde(default)]
 pub struct Konfig {
-    pub options: Vec<SocketMessage>,
+    pub default: Vec<SocketMessage>,
     pub keys: HashMap<VirtualKey, SocketMessage>,
     #[serde(rename = "window")]
     pub windows: Vec<Window>,

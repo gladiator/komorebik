@@ -84,7 +84,7 @@ fn init(config: &Konfig) -> Result<Vec<HotKey>> {
         }
     }
 
-    for option in &config.options {
+    for option in &config.default {
         process(option)?;
     }
 

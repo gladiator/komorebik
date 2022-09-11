@@ -1,4 +1,4 @@
-options = [
+default = [
     { type = "ContainerPadding", content = [0, 0, 4] },
     { type = "WorkspacePadding", content = [0, 0, 4] },
 ]
