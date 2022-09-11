@@ -1,12 +1,7 @@
-[container_padding]
-monitor = 0
-workspace = 0
-padding = 4
-
-[workspace_padding]
-monitor = 0
-workspace = 0
-padding = 4
+options = [
+    { type = "ContainerPadding", content = [0, 0, 4] },
+    { type = "WorkspacePadding", content = [0, 0, 4] },
+]
 
 [keys]
 left = { type = "MoveWindow", content = "Left" }

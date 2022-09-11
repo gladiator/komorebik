@@ -84,20 +84,8 @@ fn init(config: &Konfig) -> Result<Vec<HotKey>> {
         }
     }
 
-    if let Some(container) = &config.container_padding {
-        process(&SocketMessage::ContainerPadding(
-            container.monitor,
-            container.workspace,
-            container.padding,
-        ))?;
-    }
-
-    if let Some(workspace) = &config.workspace_padding {
-        process(&SocketMessage::WorkspacePadding(
-            workspace.monitor,
-            workspace.workspace,
-            workspace.padding,
-        ))?;
+    for option in &config.options {
+        process(option)?;
     }
 
     let mut keys = Vec::new();
