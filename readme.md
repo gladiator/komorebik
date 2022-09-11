@@ -45,8 +45,6 @@ Key names are determined in [keyboard.rs](src/keyboard.rs).  Unless explicitly r
 
 ### Windows
 
-Window rules are specified within the configuration.
-
 ```toml
 [[window]]
 bordered = true             # identify-border-overflow-application
@@ -65,5 +63,3 @@ name = "sample.exe"
 type = "title"
 name = "Sample Title"
 ```
-
-This provides a very generic layout so almost any window can be configured.
