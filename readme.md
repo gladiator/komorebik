@@ -1,4 +1,4 @@
-# Komorebik
+# komorebik
 
 A configuration and keyboard shortcut handler for [komorebi](https://github.com/LGUG2Z/komorebi/).
 
