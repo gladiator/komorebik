@@ -18,15 +18,15 @@ This assumes that komorebik currently resides somewhere in `PATH`.
 
 komorebik's configuration is located at `~/.config/komorebik.toml`.
 
-The configuration executes as soon as komorebik has started, in order for changes to take effect you must restart the application.
+The configuration executes as soon as komorebik has started.  In order for changes to take effect you must restart the application.
 
-A sample has been provided in `examples/`.  It is heavily based off of the [komorebi.generated.ahk](https://github.com/LGUG2Z/komorebi/blob/master/komorebi.generated.ahk) script.
+A sample has been provided in `examples/`, it is heavily based off of the [komorebi.generated.ahk](https://github.com/LGUG2Z/komorebi/blob/master/komorebi.generated.ahk) script.
 
 ### Keys
 
-Currently, the modifier keys are `CONTROL+ALT`.  So far, this has the least amount of conflicts with Windows but should be configurable in the future.
+Currently, the modifier keys are `CONTROL+ALT` as it has the least amount of conflicting usage but should be configurable in the future.
 
-Keys are structured using komorebi's socket schema.  This should be explained in more detail in the future.
+Keys are structured using komorebi's socket schema and should be explained more in the future.
 
 ```toml
 [keys]
@@ -41,7 +41,7 @@ j = { type = "ResizeWindowAxis", content = ["Horizontal", "Decrease"] }
 l = { type = "ResizeWindowAxis", content = ["Horizontal", "Increase"] }
 ```
 
-Key names are determined in [keyboard.rs](src/keyboard.rs).  Unless explicitly renamed, write the key's name in `lower_snake_case`.
+Key names are determined [here](src/keyboard.rs).  Unless explicitly renamed, write the name in "lower_snake_case".
 
 ### Windows
 
