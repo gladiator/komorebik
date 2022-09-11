@@ -37,9 +37,7 @@ j = { type = "ResizeWindowAxis", content = ["Horizontal", "Decrease"] }
 l = { type = "ResizeWindowAxis", content = ["Horizontal", "Increase"] }
 ```
 
-Key names are determined in [keyboard.rs](src/keyboard.rs).
-
-Unless explicitly renamed, write the key's name in `lower_snake_case`.
+Key names are determined in [keyboard.rs](src/keyboard.rs).  Unless explicitly renamed, write the key's name in `lower_snake_case`.
 
 ### Windows
 
