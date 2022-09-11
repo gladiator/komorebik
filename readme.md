@@ -34,7 +34,6 @@ left = { type = "MoveWindow", content = "Left" }
 right = { type = "MoveWindow", content = "Right" }
 up = { type = "MoveWindow", content = "Up" }
 down = { type = "MoveWindow", content = "Down" }
-
 k = { type = "ResizeWindowAxis", content = ["Vertical", "Decrease"] }
 i = { type = "ResizeWindowAxis", content = ["Vertical", "Increase"] }
 j = { type = "ResizeWindowAxis", content = ["Horizontal", "Decrease"] }
