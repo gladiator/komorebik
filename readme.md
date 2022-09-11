@@ -20,9 +20,9 @@ This configuration executes as soon as *komorebik* has started, in order for cha
 
 ### Keys
 
-Currently, the modifier keys are `CONTROL+ALT`.  So far this has the least amount of conflicting usage with Windows and other applications but should be configurable in the future.
+Currently, the modifier keys are `CONTROL+ALT`.  So far, this has the least amount of conflicts with Windows but should be configurable in the future.
 
-Keys are structured like komorebi's socket schema.  This will be explained in detail in the future, hopefully you can figure it out for now.
+Keys are structured using komorebi's socket schema.  This should be explained in more detail in the future.
 
 ```toml
 [keys]
@@ -30,6 +30,11 @@ left = { type = "MoveWindow", content = "Left" }
 right = { type = "MoveWindow", content = "Right" }
 up = { type = "MoveWindow", content = "Up" }
 down = { type = "MoveWindow", content = "Down" }
+
+k = { type = "ResizeWindowAxis", content = ["Vertical", "Decrease"] }
+i = { type = "ResizeWindowAxis", content = ["Vertical", "Increase"] }
+j = { type = "ResizeWindowAxis", content = ["Horizontal", "Decrease"] }
+l = { type = "ResizeWindowAxis", content = ["Horizontal", "Increase"] }
 ```
 
 Key names are determined by [keyboard.rs](src/keyboard.rs).  Unless explicitly renamed, use the enumerator's name in all lowercase.
