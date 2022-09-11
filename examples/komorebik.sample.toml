@@ -15,31 +15,34 @@ up = { type = "MoveWindow", content = "Up" }
 down = { type = "MoveWindow", content = "Down" }
 
 [[window]]
-categories = ["tray"]
+tray = true
 [[window.rule]]
 type = "exe"
 name = "Bitwarden.exe"
 
 [[window]]
-categories = ["bordered", "tray"]
+bordered = true
+tray = true
 [[window.rule]]
 type = "exe"
 name = "Discord.exe"
 
 [[window]]
-categories = ["bordered", "managed", "tray"]
+bordered = true
+managed = true
+tray = true
 [[window.rule]]
 type = "exe"
 name = "GalaxyClient.exe"
 
 [[window]]
-categories = ["floating"]
+floating = true
 [[window.rule]]
 type = "class"
 name = "Chrome_RenderWidgetHostHWD"
 
 [[window]]
-categories = ["floating"]
+floating = true
 [[window.rule]]
 type = "exe"
 name = "PowerToys.ColorPicker.exe"
@@ -48,13 +51,16 @@ type = "exe"
 name = "PowerToys.ImageResizer.exe"
 
 [[window]]
-categories = ["bordered", "floating", "tray"]
+bordered = true
+floating = true
+tray = true
 [[window.rule]]
 type = "exe"
 name = "ProcessHacker.exe"
 
 [[window]]
-categories = ["name-change", "tray"]
+object_name_change = true
+tray = true
 [[window.rule]]
 type = "exe"
 name = "clion64.exe"
@@ -63,61 +69,65 @@ type = "exe"
 name = "idea64.exe"
 
 [[window]]
-categories = ["floating"]
+floating = true
 [[window.rule]]
 type = "class"
 name = "SunAwtDialog"
 
 [[window]]
-categories = ["bordered", "tray"]
+bordered = true
+tray = true
 [[window.rule]]
 type = "exe"
 name = "lghub.exe"
 
 [[window]]
-categories = ["bordered", "tray"]
+bordered = true
+tray = true
 [[window.rule]]
 type = "exe"
 name = "ShareX.exe"
 
 [[window]]
-categories = ["bordered", "tray"]
+bordered = true
+tray = true
 [[window.rule]]
 type = "exe"
 name = "Spotify.exe"
 
 [[window]]
-categories = ["bordered"]
+bordered = true
 [[window.rule]]
 type = "class"
 name = "vguiPopupWindow"
 
 [[window]]
-categories = ["floating"]
+floating = true
 [[window.rule]]
 type = "class"
 name = "TaskManagerWindow"
 
 [[window]]
-categories = ["bordered", "tray"]
+bordered = true
+tray = true
 [[window.rule]]
 type = "exe"
 name = "Telegram.exe"
 
 [[window]]
-categories = ["bordered"]
+bordered = true
 [[window.rule]]
 type = "exe"
 name = "Code.exe"
 
 [[window]]
-categories = ["managed"]
+managed = true
 [[window.rule]]
 type = "class"
 name = "ConsoleWindowClass"
 
 [[window]]
-categories = ["floating"]
+floating = true
 [[window.rule]]
 type = "class"
 name = "OperationStatusWindow"
