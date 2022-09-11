@@ -68,7 +68,7 @@ fn init(config: &Konfig) -> Result<Vec<HotKey>> {
                 ))?;
             }
 
-            if let Some(true) = &window.object_name_change {
+            if let Some(true) = &window.name_change {
                 process(&SocketMessage::IdentifyObjectNameChangeApplication(
                     rule.identifier,
                     rule.name.clone(),
