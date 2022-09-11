@@ -22,7 +22,7 @@ pub struct Window {
     pub floating: Option<bool>,
     pub layered: Option<bool>,
     pub managed: Option<bool>,
-    pub object_name_change: Option<bool>,
+    pub name_change: Option<bool>,
     pub tray: Option<bool>,
     #[serde(rename = "rule")]
     pub rules: Vec<Rule>,

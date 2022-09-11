@@ -46,12 +46,12 @@ Key names are determined [here](src/keyboard.rs).  Unless explicitly renamed, wr
 
 ```toml
 [[window]]
-bordered = true             # identify-border-overflow-application
-floating = true             # float-rule
-layered = true              # identify-layered-application
-managed = true              # manage-rule
-object_name_change = true   # identify-object-name-change-application
-tray = true                 # identify-tray-application
+bordered = true      # identify-border-overflow-application
+floating = true      # float-rule
+layered = true       # identify-layered-application
+managed = true       # manage-rule
+name_change = true   # identify-object-name-change-application
+tray = true          # identify-tray-application
 [[window.rule]]
 type = "class"
 name = "SampleWindowClass"

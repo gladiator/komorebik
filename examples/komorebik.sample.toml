@@ -58,7 +58,7 @@ type = "exe"
 name = "ProcessHacker.exe"
 
 [[window]]
-object_name_change = true
+name_change = true
 tray = true
 [[window.rule]]
 type = "exe"
