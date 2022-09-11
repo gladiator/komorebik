@@ -12,8 +12,8 @@ A better solution will be provided for starting komorebik in the background.  I'
 Start-Process komorebik.exe -WindowStyle hidden
 ```
 
-[This assumes that komorebik currently resides somewhere in `PATH`.
-](https://github.com/gladiator/komorebik)
+This assumes that komorebik currently resides somewhere in `PATH`.
+
 ## Configuration
 
 komorebik's configuration is located at `~/.config/komorebik.toml`.
