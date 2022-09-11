@@ -14,9 +14,11 @@ This assumes that `komorebik.exe` currently resides somewhere in `PATH`.
 
 ## Configuration
 
-A sample configuration has been provided in `examples/`.  It is heavily based off of the `komorebi.generated.ahk` script.
+komorebik's configuration is located at `~/.config/komorebik.toml`.
 
-This configuration executes as soon as *komorebik* has started, in order for changes to take effect you must restart the application.
+The configuration executes as soon as *komorebik* has started, in order for changes to take effect you must restart the application.
+
+A sample has been provided in `examples/`.  It is heavily based off of the `komorebi.generated.ahk` script.
 
 ### Keys
 
