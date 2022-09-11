@@ -13,10 +13,7 @@ use lazy_static::lazy_static;
 use uds_windows::UnixStream;
 
 use crate::{
-    config::{
-        Category,
-        Konfig,
-    },
+    config::Konfig,
     keyboard::HotKey,
     system::poll_key,
 };
@@ -41,25 +38,48 @@ fn process(message: &SocketMessage) -> Result<()> {
 
 /// Initializes the user's configuration via `komorebic`.
 fn init(config: &Konfig) -> Result<Vec<HotKey>> {
-    let app_rule = |&category, identifier, name| -> Result<()> {
-        println!("{:#?} {:#?} {}", category, identifier, name);
-        Ok(match category {
-            Category::Bordered => process(&SocketMessage::IdentifyBorderOverflowApplication(
-                identifier, name,
-            ))?,
-            Category::Floating => process(&SocketMessage::FloatRule(identifier, name))?,
-            Category::Managed => process(&SocketMessage::ManageRule(identifier, name))?,
-            Category::NameChange => process(&SocketMessage::IdentifyObjectNameChangeApplication(
-                identifier, name,
-            ))?,
-            Category::Tray => process(&SocketMessage::IdentifyTrayApplication(identifier, name))?,
-        })
-    };
-
     for window in &config.windows {
         for rule in &window.rules {
-            for category in &window.categories {
-                app_rule(category, rule.identifier, format!("\"{}\"", rule.name))?;
+            if let Some(true) = &window.bordered {
+                process(&SocketMessage::IdentifyBorderOverflowApplication(
+                    rule.identifier,
+                    rule.name.clone(),
+                ))?;
+            }
+
+            if let Some(true) = &window.floating {
+                process(&SocketMessage::FloatRule(
+                    rule.identifier,
+                    rule.name.clone(),
+                ))?;
+            }
+
+            if let Some(true) = &window.layered {
+                process(&SocketMessage::IdentifyLayeredApplication(
+                    rule.identifier,
+                    rule.name.clone(),
+                ))?;
+            }
+
+            if let Some(true) = &window.managed {
+                process(&SocketMessage::ManageRule(
+                    rule.identifier,
+                    rule.name.clone(),
+                ))?;
+            }
+
+            if let Some(true) = &window.object_name_change {
+                process(&SocketMessage::IdentifyObjectNameChangeApplication(
+                    rule.identifier,
+                    rule.name.clone(),
+                ))?;
+            }
+
+            if let Some(true) = &window.tray {
+                process(&SocketMessage::IdentifyTrayApplication(
+                    rule.identifier,
+                    rule.name.clone(),
+                ))?;
             }
         }
     }
@@ -81,7 +101,7 @@ fn init(config: &Konfig) -> Result<Vec<HotKey>> {
     }
 
     let mut keys = Vec::new();
-    for (key, _message) in &config.keys {
+    for (key, _) in &config.keys {
         keys.push(HotKey::register(key.clone())?);
     }
 
@@ -104,8 +124,6 @@ fn main() -> Result<()> {
         if let Some(message) = config.keys.get(&key) {
             process(message)?;
         }
-
-        continue;
     }
 
     Ok(())

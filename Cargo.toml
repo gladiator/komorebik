@@ -7,13 +7,11 @@ edition = "2021"
 config = { version = "0.13.2", features = ["toml"] }
 dirs = "4.0.0"
 eyre = "0.6.8"
-komorebi = { git = "https://github.com/LGUG2Z/komorebi.git" }
 komorebi-core = { git = "https://github.com/LGUG2Z/komorebi.git" }
 lazy_static = "1.4.0"
 num-traits = "0.2.15"
 num-derive = "0.3.3"
 serde = { version = "1.0.144", features = ["derive"] }
-toml = "0.5.9"
 uds_windows = "1.0.2"
 
 [dependencies.windows]
