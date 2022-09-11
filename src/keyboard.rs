@@ -13,7 +13,6 @@ use crate::system::{
 /// A system-wide key that is registered upon creation
 /// and unregistered upon destruction.
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[repr(transparent)]
 pub struct HotKey(VirtualKey);
 
 impl HotKey {
@@ -34,7 +33,6 @@ impl Drop for HotKey {
 }
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq, Eq, Deserialize, FromPrimitive, ToPrimitive)]
-#[repr(u32)]
 #[serde(rename_all = "snake_case")]
 pub enum VirtualKey {
     LButton = 0x01,
