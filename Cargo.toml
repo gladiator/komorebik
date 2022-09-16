@@ -4,7 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-config = { version = "0.13.2", features = ["toml"] }
 dirs = "4.0.0"
 eyre = "0.6.8"
 komorebi-core = { git = "https://github.com/LGUG2Z/komorebi.git" }
@@ -13,6 +12,11 @@ num-traits = "0.2.15"
 num-derive = "0.3.3"
 serde = { version = "1.0.144", features = ["derive"] }
 uds_windows = "1.0.2"
+
+[dependencies.config]
+default-features = false
+features = ["toml"]
+version = "0.13.2"
 
 [dependencies.windows]
 features = [

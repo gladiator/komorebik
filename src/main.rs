@@ -10,7 +10,7 @@ use crate::{
     keyboard::HotKey,
     system::{
         poll_key,
-        process,
+        send_message,
     },
 };
 
@@ -23,42 +23,39 @@ fn init(config: &Konfig) -> Result<Vec<HotKey>> {
     for window in &config.windows {
         for rule in &window.rules {
             if let Some(true) = &window.bordered {
-                process(&SocketMessage::IdentifyBorderOverflowApplication(
+                send_message(SocketMessage::IdentifyBorderOverflowApplication(
                     rule.identifier,
                     rule.name.clone(),
                 ))?;
             }
 
             if let Some(true) = &window.floating {
-                process(&SocketMessage::FloatRule(
-                    rule.identifier,
-                    rule.name.clone(),
-                ))?;
+                send_message(SocketMessage::FloatRule(rule.identifier, rule.name.clone()))?;
             }
 
             if let Some(true) = &window.layered {
-                process(&SocketMessage::IdentifyLayeredApplication(
+                send_message(SocketMessage::IdentifyLayeredApplication(
                     rule.identifier,
                     rule.name.clone(),
                 ))?;
             }
 
             if let Some(true) = &window.managed {
-                process(&SocketMessage::ManageRule(
+                send_message(SocketMessage::ManageRule(
                     rule.identifier,
                     rule.name.clone(),
                 ))?;
             }
 
             if let Some(true) = &window.name_change {
-                process(&SocketMessage::IdentifyObjectNameChangeApplication(
+                send_message(SocketMessage::IdentifyObjectNameChangeApplication(
                     rule.identifier,
                     rule.name.clone(),
                 ))?;
             }
 
             if let Some(true) = &window.tray {
-                process(&SocketMessage::IdentifyTrayApplication(
+                send_message(SocketMessage::IdentifyTrayApplication(
                     rule.identifier,
                     rule.name.clone(),
                 ))?;
@@ -67,7 +64,7 @@ fn init(config: &Konfig) -> Result<Vec<HotKey>> {
     }
 
     for option in &config.default {
-        process(option)?;
+        send_message(option.clone())?;
     }
 
     let mut keys = Vec::new();
@@ -92,7 +89,7 @@ fn main() -> Result<()> {
     let _keys = init(&config)?;
     while let Some(key) = poll_key()? {
         if let Some(message) = config.keys.get(&key) {
-            process(message)?;
+            send_message(message.clone())?;
         }
     }
 
