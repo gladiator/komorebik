@@ -24,4 +24,4 @@ features = [
     "Win32_UI_Input_KeyboardAndMouse",
     "Win32_UI_WindowsAndMessaging",
 ]
-version = "0.39.0"
+version = "0.43.0"
