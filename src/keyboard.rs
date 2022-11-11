@@ -1,4 +1,3 @@
-use eyre::Result;
 use num_derive::{
     FromPrimitive,
     ToPrimitive,
@@ -10,24 +9,19 @@ use crate::system::{
     unregister_hot_key,
 };
 
-/// A system-wide key that is registered upon creation
-/// and unregistered upon destruction.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct HotKey(VirtualKey);
 
 impl HotKey {
-    /// Creates a [HotKey] and registers it to the system.
-    /// Gives ownership of the key to whomever is calling, when
-    /// it is dropped it will be unregistered from the system.
-    pub fn register(key: VirtualKey) -> Result<Self> {
-        register_hot_key(key)?;
-        Ok(Self(key))
+    pub fn new(key: VirtualKey) -> Self {
+        Self(key)
     }
-}
 
-impl Drop for HotKey {
-    fn drop(&mut self) {
-        // Unregister the key from the system, regardless
+    pub fn register(&self) {
+        register_hot_key(self.0).unwrap();
+    }
+
+    pub fn unregister(&self) {
         unregister_hot_key(self.0).unwrap();
     }
 }

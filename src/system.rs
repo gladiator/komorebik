@@ -31,11 +31,7 @@ use windows::Win32::UI::{
 
 use crate::keyboard::VirtualKey;
 
-/// Writes a message to Komorebi's socket.
-///
-/// We shouldn't need to reconnect every message but it seems
-/// that komorebi doesn't actively maintain connected clients and
-/// will only read a single message before dropping it. :(
+/// Writes a message to komorebi's socket.
 pub(crate) fn send_message(message: SocketMessage) -> Result<()> {
     lazy_static! {
         static ref SOCKET: PathBuf = dirs::data_local_dir()
@@ -49,24 +45,20 @@ pub(crate) fn send_message(message: SocketMessage) -> Result<()> {
     Ok(())
 }
 
-/// Attempts to register a system-wide hotkey that will cause our
-/// application to receive [MSG]s that occur when certain keys are/have
-/// been pressed.
+/// Attempts to register a system-wide hot-key.
 pub(crate) fn register_hot_key(key: VirtualKey) -> Result<()> {
-    let message = key.to_i32().ok_or(eyre!("invalid key"))?;
-    let key = key as u32;
-    unsafe { RegisterHotKey(None, message, MOD_ALT | MOD_CONTROL | MOD_NOREPEAT, key).ok()? };
+    let id = key.to_i32().ok_or(eyre!("invalid key"))?;
+    unsafe { RegisterHotKey(None, id, MOD_ALT | MOD_CONTROL | MOD_NOREPEAT, key as u32).ok()? };
     Ok(())
 }
 
-/// Attempts to unregister a system-wide hotkey based on the key itself.
+/// Attempts to unregister a system-wide hot-key.
 pub(crate) fn unregister_hot_key(key: VirtualKey) -> Result<()> {
     unsafe { UnregisterHotKey(None, key.to_i32().ok_or(eyre!("invalid key"))?) };
     Ok(())
 }
 
-/// Polls the system using [GetMessageA].  Will block the current
-/// thread to wait for any messages that relate to our keys.
+/// Calls [GetMessageA] which polls the system for hot-key messages.
 pub(crate) fn poll_key() -> Result<Option<VirtualKey>> {
     let result = unsafe {
         let mut msg = MSG::default();

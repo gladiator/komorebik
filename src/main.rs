@@ -68,8 +68,8 @@ fn init(config: &Konfig) -> Result<Vec<HotKey>> {
     }
 
     let mut keys = Vec::new();
-    for (key, _) in &config.keys {
-        keys.push(HotKey::register(key.clone())?);
+    for key in config.keys.keys() {
+        keys.push(HotKey::new(*key));
     }
 
     Ok(keys)
@@ -86,11 +86,19 @@ fn main() -> Result<()> {
         .build()?
         .try_deserialize()?;
 
-    let _keys = init(&config)?;
+    let keys = init(&config)?;
+    for key in &keys {
+        key.register();
+    }
+
     while let Some(key) = poll_key()? {
         if let Some(message) = config.keys.get(&key) {
             send_message(message.clone())?;
         }
+    }
+
+    for key in &keys {
+        key.unregister();
     }
 
     Ok(())
