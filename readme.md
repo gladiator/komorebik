@@ -2,8 +2,6 @@
 
 A configuration and keyboard shortcut handler for [komorebi](https://github.com/LGUG2Z/komorebi/).
 
----
-
 ## How to Use
 
 You can build from source using `cargo build --release`.
@@ -16,7 +14,6 @@ Start-Process komorebik.exe -WindowStyle hidden
 
 This assumes that komorebik currently resides somewhere in `PATH`.
 
----
 
 ## Configuration
 
