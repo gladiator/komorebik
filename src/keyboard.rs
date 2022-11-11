@@ -18,16 +18,29 @@ impl HotKey {
     }
 
     pub fn register(&self) {
-        register_hot_key(self.0).unwrap();
+        register_hot_key(self.0).expect("failed to register hot-key");
     }
 
     pub fn unregister(&self) {
-        unregister_hot_key(self.0).unwrap();
+        unregister_hot_key(self.0).expect("failed to unregister hot-key");
     }
 }
 
-#[derive(Clone, Copy, Debug, Hash, PartialEq, Eq, Deserialize, FromPrimitive, ToPrimitive)]
+#[derive(
+    Clone,
+    Copy,
+    Debug,
+    Hash,
+    PartialEq,
+    Eq,
+    Deserialize,
+    FromPrimitive,
+    ToPrimitive,
+    strum::EnumString,
+)]
 #[serde(rename_all = "snake_case")]
+#[serde(try_from = "&str")]
+#[strum(serialize_all = "snake_case")]
 pub enum VirtualKey {
     LButton = 0x01,
     RButton = 0x02,

@@ -11,12 +11,10 @@ lazy_static = "1.4.0"
 num-traits = "0.2.15"
 num-derive = "0.3.3"
 serde = { version = "1.0.144", features = ["derive"] }
+toml = "0.5.9"
+serde_yaml = "0.9.14"
+strum = "0.24.1"
 uds_windows = "1.0.2"
-
-[dependencies.config]
-default-features = false
-features = ["toml"]
-version = "0.13.2"
 
 [dependencies.windows]
 features = [

@@ -1,12 +1,16 @@
-use ::config::{
-    Config,
-    File,
+use std::path::Path;
+
+use eyre::{
+    eyre,
+    Result,
 };
-use eyre::Result;
 use komorebi_core::SocketMessage;
 
 use crate::{
-    config::Konfig,
+    config::{
+        gen_app_specific_cfg,
+        Konfig,
+    },
     keyboard::HotKey,
     system::{
         poll_key,
@@ -18,7 +22,7 @@ mod config;
 mod keyboard;
 mod system;
 
-/// Initializes the user's configuration via `komorebic`.
+/// Initialize the user's configuration via `komorebic`.
 fn init(config: &Konfig) -> Result<Vec<HotKey>> {
     for window in &config.windows {
         for rule in &window.rules {
@@ -78,27 +82,37 @@ fn init(config: &Konfig) -> Result<Vec<HotKey>> {
 fn main() -> Result<()> {
     let config = dirs::home_dir()
         .expect("missing home directory!")
-        .join(".config/")
-        .join("komorebik.toml");
+        .join(".config");
 
-    let config = Config::builder()
-        .add_source(File::from(config))
-        .build()?
-        .try_deserialize()?;
-
-    let keys = init(&config)?;
-    for key in &keys {
-        key.register();
+    if !config.exists() {
+        return Err(eyre!("the '~/.config' directory doesn't exist!"));
     }
 
-    while let Some(key) = poll_key()? {
-        if let Some(message) = config.keys.get(&key) {
-            send_message(message.clone())?;
+    let mut args = std::env::args().skip(1);
+    if let Some(path) = args.next() {
+        let path = Path::new(&path);
+        if !path.exists() {
+            return Err(eyre!("app-specific configuration doesn't exist!"));
         }
-    }
 
-    for key in &keys {
-        key.unregister();
+        gen_app_specific_cfg(path.into())?;
+    } else {
+        let config = config.join("komorebik.toml");
+        let config = toml::from_slice(std::fs::read(config)?.as_slice())?;
+        let keys = init(&config)?;
+        for key in &keys {
+            key.register();
+        }
+
+        while let Some(key) = poll_key()? {
+            if let Some(message) = config.keys.get(&key) {
+                send_message(message.clone())?;
+            }
+        }
+
+        for key in &keys {
+            key.unregister();
+        }
     }
 
     Ok(())

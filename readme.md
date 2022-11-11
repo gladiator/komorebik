@@ -22,6 +22,21 @@ The configuration executes as soon as komorebik has started.  In order for chang
 
 A sample has been provided in `examples/`, it is heavily based off of the [komorebi.generated.ahk](https://github.com/LGUG2Z/komorebi/blob/master/komorebi.generated.ahk) script.
 
+### App-Specific Config Generation
+
+komorebik has the ability to parse and generate a usable configuration from the [community's app-specific configuration](https://github.com/LGUG2Z/komorebi-application-specific-configuration).
+
+There is an already generated example that may/may not be up-to-date within the `examples/` directory.
+
+In order to generate a fresh one, pass an argument to `komorebik.exe` specifying a valid path to `applications.yaml`:
+
+```shell
+komorebik ./applications.yaml
+# outputs: generated app-specific config at C:\Users\user\.config\komorebik.generated.toml!
+```
+
+This will create a file at `~/.config/komorebik.generated.toml`, the contents of which must be added to the bottom of your existing `komorebik.toml` configuration to take effect.
+
 ### Keys
 
 Currently, the modifier keys are `CONTROL+ALT` as it has the least amount of conflicting usage but should be configurable in the future.
